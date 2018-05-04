@@ -1,25 +1,18 @@
 __author__ = 'Alfredo Saglimbeni'
 __mail__ = "repirro@gmail.com"
 
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
-
-#!/usr/bin/env python
-from setuptools import  find_packages
+import setuptools
 
 METADATA = dict(
-    name='mod_auth_library',
+    name='mod-auth',
     version='1.0',
     author='Alfredo Saglimbeni',
-    author_email='a.saglimbeni@scsitaly.com, repirro@gmail.com',
-    description='Powerfull and useful library to integrate mod_auth_tkt and mod_auth_pubtkt into your projects.',
+    author_email='repirro@gmail.com',
+    description='Powerful and useful library to integrate mod_auth_tkt and mod_auth_pubtkt into your projects.',
     long_description=open('./README.txt').read(),
-    url='https://github.com/b3c/mod_auth/zipball/master',
+    url='https://github.com/debrando/mod_auth',
     license = "BSD",
-    keywords='mod_auth mod_auth_pubtkt mod_auth_tkt authentication single sign on ticket',
+    keywords='mod_auth mod_auth_pubtkt mod_auth_tkt authentication single sign on ticket SSO',
     install_requires=['M2Crypto','pycrypto'],
     include_package_data=True,
     classifiers=[
@@ -30,9 +23,23 @@ METADATA = dict(
         'Operating System :: OS Independent',
         ],
     zip_safe=False,
-    packages=find_packages(),
+    packages=setuptools.find_packages(),
 )
 
-if __name__ == '__main__':
-    setup(**METADATA)
+try:
+    import distutils.command.bdist_conda
+    print("Conda distribution")
+    METADATA.update(dict(
+        distclass=distutils.command.bdist_conda.CondaDistribution,
+        conda_import_tests=True,
+        conda_command_tests=True,
+        conda_buildnum=1,
+        project_urls={
+            "Source Code": "https://github.com/debrando/mod_auth"
+        }
+    ))
+except ImportError:
+    print("Standard distribution")
 
+if __name__ == '__main__':
+    setuptools.setup(**METADATA)
